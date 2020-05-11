@@ -485,42 +485,42 @@ macro(nRF5x_addAppFDS)
 endmacro(nRF5x_addAppFDS)
 
 # adds NFC library
-# macro(nRF5x_addNFC)
-#     # NFC includes
-#     include_directories(
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ac_rec_parser"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ble_oob_advdata_parser"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/le_oob_rec_parser"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ac_rec"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_oob_advdata"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_lib"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_msg"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/common"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ep_oob_rec"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/hs_rec"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/le_oob_rec"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/generic/message"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/generic/record"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/launchapp"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/parser/message"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/parser/record"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/text"
-#             "${NRF5_SDK_PATH}/components/nfc/ndef/uri"
-#             "${NRF5_SDK_PATH}/components/nfc/t2t_lib"
-#             "${NRF5_SDK_PATH}/components/nfc/t2t_parser"
-#             "${NRF5_SDK_PATH}/components/nfc/t4t_lib"
-#             "${NRF5_SDK_PATH}/components/nfc/t4t_parser/apdu"
-#             "${NRF5_SDK_PATH}/components/nfc/t4t_parser/cc_file"
-#             "${NRF5_SDK_PATH}/components/nfc/t4t_parser/hl_detection_procedure"
-#             "${NRF5_SDK_PATH}/components/nfc/t4t_parser/tlv"
-#     )
-# 
-#     list(APPEND SDK_SOURCE_FILES
-#             "${NRF5_SDK_PATH}/components/nfc"
-#             )
-# 
-# endmacro(nRF5x_addNFC)
+macro(nRF5x_addNFC)
+    # NFC includes
+    include_directories(
+            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ac_rec_parser"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ble_oob_advdata_parser"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/le_oob_rec_parser"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ac_rec"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_oob_advdata"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_lib"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_msg"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/common"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ep_oob_rec"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/hs_rec"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/le_oob_rec"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/generic/message"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/generic/record"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/launchapp"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/parser/message"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/parser/record"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/text"
+            "${NRF5_SDK_PATH}/components/nfc/ndef/uri"
+            "${NRF5_SDK_PATH}/components/nfc/t2t_lib"
+            "${NRF5_SDK_PATH}/components/nfc/t2t_parser"
+            "${NRF5_SDK_PATH}/components/nfc/t4t_lib"
+            "${NRF5_SDK_PATH}/components/nfc/t4t_parser/apdu"
+            "${NRF5_SDK_PATH}/components/nfc/t4t_parser/cc_file"
+            "${NRF5_SDK_PATH}/components/nfc/t4t_parser/hl_detection_procedure"
+            "${NRF5_SDK_PATH}/components/nfc/t4t_parser/tlv"
+    )
+
+    list(APPEND SDK_SOURCE_FILES
+            "${NRF5_SDK_PATH}/components/nfc"
+            )
+
+endmacro(nRF5x_addNFC)
 
 macro(nRF5x_addBLEService NAME)
     include_directories(
