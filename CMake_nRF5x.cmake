@@ -37,6 +37,9 @@ endif ()
 # must be set in file (not macro) scope (in macro would point to parent CMake directory)
 set(DIR_OF_nRF5x_CMAKE ${CMAKE_CURRENT_LIST_DIR})
 
+#
+string(TOUPPER ${SD_FAMILY} SD_FAMILY_UPPER)
+
 macro(nRF5x_toolchainSetup)
     include(${DIR_OF_nRF5x_CMAKE}/arm-gcc-toolchain.cmake)
 endmacro()
@@ -61,7 +64,7 @@ macro(nRF5x_setup)
         endif()
         set(CPU_FLAGS "-mcpu=cortex-m0 -mfloat-abi=soft")
         add_definitions(-DBOARD_PCA10028 -DNRF51 -DNRF51422)
-        add_definitions(-DSOFTDEVICE_PRESENT -DS130 -DNRF_SD_BLE_API_VERSION=2 -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD)
+        add_definitions(-DSOFTDEVICE_PRESENT -D${SD_FAMILY_UPPER} -DNRF_SD_BLE_API_VERSION=2 -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD)
         include_directories(
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf51"
@@ -79,7 +82,7 @@ macro(nRF5x_setup)
         endif()
         set(CPU_FLAGS "-mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
         add_definitions(-DNRF52 -DNRF52832 -DNRF52832_XXAA -DNRF52_PAN_74 -DNRF52_PAN_64 -DNRF52_PAN_12 -DNRF52_PAN_58 -DNRF52_PAN_54 -DNRF52_PAN_31 -DNRF52_PAN_51 -DNRF52_PAN_36 -DNRF52_PAN_15 -DNRF52_PAN_20 -DNRF52_PAN_55 -DBOARD_PCA10040)
-        add_definitions(-DSOFTDEVICE_PRESENT -DS132 -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD -DNRF_SD_BLE_API_VERSION=6)
+        add_definitions(-DSOFTDEVICE_PRESENT -D${SD_FAMILY_UPPER} -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD -DNRF_SD_BLE_API_VERSION=6)
         include_directories(
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf52"
