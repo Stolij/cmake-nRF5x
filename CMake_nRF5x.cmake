@@ -228,18 +228,6 @@ macro(nRF5x_setup)
             "${NRF5_SDK_PATH}/components/libraries/uart/retarget.c"
             )
 
-    # Segger RTT
-    include_directories(
-            "${NRF5_SDK_PATH}/external/segger_rtt/"
-    )
-
-    list(APPEND SDK_SOURCE_FILES
-            "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c"
-            "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT.c"
-            "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_printf.c"
-            )
-
-
     # Other external
     include_directories(
             "${NRF5_SDK_PATH}/external/fprintf/"
@@ -307,6 +295,21 @@ macro(nRF5x_setup)
             )
 
 endmacro(nRF5x_setup)
+
+macro(nRF5x_add_SEGGER_RTT)
+    
+    # Segger RTT
+    include_directories(
+            "${NRF5_SDK_PATH}/external/segger_rtt/"
+    )
+
+    list(APPEND SDK_SOURCE_FILES
+            "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c"
+            "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT.c"
+            "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_printf.c"
+            )
+    
+endmacro(nRF5x_add_SEGGER_RTT)
 
 # adds a target for comiling and flashing an executable
 macro(nRF5x_addExecutable EXECUTABLE_NAME SOURCE_FILES)
