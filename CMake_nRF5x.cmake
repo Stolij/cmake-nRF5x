@@ -268,7 +268,7 @@ macro(nRF5x_setup)
     # adds target for erasing and flashing the board with a softdevice
     add_custom_target(FLASH_SOFTDEVICE ALL
             COMMAND ${NRFJPROG} --program ${SOFTDEVICE_PATH} -f ${NRF_TARGET} --sectorerase
-            COMMAND sleep 0.5s
+            # COMMAND sleep 0.5s
             COMMAND ${NRFJPROG} --reset -f ${NRF_TARGET}
             COMMENT "flashing SoftDevice"
             )
@@ -289,7 +289,7 @@ macro(nRF5x_setup)
     add_custom_target(START_JLINK ALL
             COMMAND ${TERMINAL} "${DIR_OF_nRF5x_CMAKE}/runJLinkGDBServer-${NRF_TARGET}"
             COMMAND ${TERMINAL} "${DIR_OF_nRF5x_CMAKE}/runJLinkExe-${NRF_TARGET}"
-            COMMAND sleep 2s
+            # COMMAND sleep 2s
             COMMAND ${TERMINAL} "${DIR_OF_nRF5x_CMAKE}/runJLinkRTTClient"
             COMMENT "started JLink commands"
             )
@@ -330,7 +330,7 @@ macro(nRF5x_addExecutable EXECUTABLE_NAME SOURCE_FILES)
     add_custom_target("FLASH_${EXECUTABLE_NAME}" ALL
             DEPENDS ${EXECUTABLE_NAME}
             COMMAND ${NRFJPROG} --program ${EXECUTABLE_NAME}.hex -f ${NRF_TARGET} --sectorerase
-            COMMAND sleep 0.5s
+            # COMMAND sleep 0.5s
             COMMAND ${NRFJPROG} --reset -f ${NRF_TARGET}
             COMMENT "flashing ${EXECUTABLE_NAME}.hex"
             )
