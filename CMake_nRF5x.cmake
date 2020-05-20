@@ -130,6 +130,7 @@ macro(nRF5x_setup)
             "${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_uart.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_clock.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_timer.c"
+            "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_spi.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_gpiote.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_uart.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_uarte.c"
