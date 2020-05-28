@@ -132,6 +132,8 @@ macro(nRF5x_setup)
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_timer.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_spi.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twi.c"
+            "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twi_twim.c"
+            "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twim.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_saadc.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_gpiote.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_uart.c"
