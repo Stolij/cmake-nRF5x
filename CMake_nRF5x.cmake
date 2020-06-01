@@ -274,13 +274,15 @@ macro(nRF5x_setup)
             "${NRF5_SDK_PATH}/components/ble/nrf_ble_qwr/nrf_ble_qwr.c"
             )
 
-    # adds target for erasing and flashing the board with a softdevice
-    add_custom_target(FLASH_SOFTDEVICE ALL
-            COMMAND ${NRFJPROG} --program ${SOFTDEVICE_PATH} -f ${NRF_TARGET} --sectorerase
-            # COMMAND sleep 0.5s
-            COMMAND ${NRFJPROG} --reset -f ${NRF_TARGET}
-            COMMENT "flashing SoftDevice"
-            )
+    if (USE_SOFTDEVICE)
+        # adds target for erasing and flashing the board with a softdevice
+        add_custom_target(FLASH_SOFTDEVICE ALL
+                COMMAND ${NRFJPROG} --program ${SOFTDEVICE_PATH} -f ${NRF_TARGET} --sectorerase
+                # COMMAND sleep 0.5s
+                COMMAND ${NRFJPROG} --reset -f ${NRF_TARGET}
+                COMMENT "flashing SoftDevice"
+                )
+    endif ()
 
     add_custom_target(FLASH_ERASE ALL
             COMMAND ${NRFJPROG} --eraseall -f ${NRF_TARGET}
