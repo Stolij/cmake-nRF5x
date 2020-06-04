@@ -69,10 +69,17 @@ macro(nRF5x_setup)
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf51"
         )
-        list(APPEND SDK_SOURCE_FILES
-                "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf51.c"
-                "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf51.S"
-                )
+        if (NOT DEFINED NRF5_STARTUP_FILES_PATH)
+            list(APPEND SDK_SOURCE_FILES
+                    "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf51.c"
+                    "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf51.S"
+                    )
+        else()
+            list(APPEND SDK_SOURCE_FILES
+                    "${NRF5_STARTUP_FILES_PATH}/system_nrf51.c"
+                    "${NRF5_STARTUP_FILES_PATH}/gcc_startup_nrf51.S"
+                    )
+        endif()
         set(SOFTDEVICE_PATH "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/hex/${SD_FAMILY}_nrf51_${SD_REVISION}_softdevice.hex")
     elseif (NRF_TARGET MATCHES "nrf52")
         # nRF52 (nRF52-DK => PCA10040)
@@ -87,10 +94,17 @@ macro(nRF5x_setup)
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
                 "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf52"
         )
-        list(APPEND SDK_SOURCE_FILES
-                "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52.c"
-                "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf52.S"
-                )
+        if (NOT DEFINED NRF5_STARTUP_FILES_PATH)
+            list(APPEND SDK_SOURCE_FILES
+                    "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52.c"
+                    "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf52.S"
+                    )
+        else()
+            list(APPEND SDK_SOURCE_FILES
+                    "${NRF5_STARTUP_FILES_PATH}/system_nrf52.c"
+                    "${NRF5_STARTUP_FILES_PATH}/gcc_startup_nrf52.S"
+                    )
+        endif()
         set(SOFTDEVICE_PATH "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/hex/${SD_FAMILY}_nrf52_${SD_REVISION}_softdevice.hex")
     endif ()
 
