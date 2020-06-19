@@ -53,8 +53,8 @@ macro(nRF5x_setup)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "")
 
     # language standard/version settings
-    set(CMAKE_C_STANDARD 99)
-    set(CMAKE_CXX_STANDARD 98)
+    # set(CMAKE_C_STANDARD 99) # This may need to be handled on a per-project basis, since ARM GCC supports the latest C standard
+    # set(CMAKE_CXX_STANDARD 98) # This may need to be handled on a per-project basis, since ARM GCC supports the latest CXX standard
 
     # CPU specyfic settings
     if (NRF_TARGET MATCHES "nrf51")
