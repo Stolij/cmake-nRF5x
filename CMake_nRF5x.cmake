@@ -9,13 +9,14 @@ if (NOT NRFJPROG)
     message(FATAL_ERROR "The path to the nrfjprog utility (NRFJPROG) must be set.")
 endif ()
 
+if (DEFINED USE_SOFTDEVICE)
+    if (NOT SD_FAMILY)
+        message(FATAL_ERROR "The SoftDevice Family (SD_FAMILY) must be set.")
+    endif ()
 
-if (NOT SD_FAMILY)
-    message(FATAL_ERROR "The SoftDevice Family (SD_FAMILY) must be set.")
-endif ()
-
-if (NOT SD_REVISION)
-    message(FATAL_ERROR "The SoftDevice Revision (SD_REVISION) must be set.")
+    if (NOT SD_REVISION)
+        message(FATAL_ERROR "The SoftDevice Revision (SD_REVISION) must be set.")
+    endif ()
 endif ()
 
 # convert toolchain path to bin path
@@ -38,7 +39,9 @@ endif ()
 set(DIR_OF_nRF5x_CMAKE ${CMAKE_CURRENT_LIST_DIR})
 
 #
-string(TOUPPER ${SD_FAMILY} SD_FAMILY_UPPER)
+if (DEFINED USE_SOFTDEVICE)
+    string(TOUPPER ${SD_FAMILY} SD_FAMILY_UPPER)
+endif ()
 
 macro(nRF5x_toolchainSetup)
     include(${DIR_OF_nRF5x_CMAKE}/arm-gcc-toolchain.cmake)
