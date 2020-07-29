@@ -67,11 +67,14 @@ macro(nRF5x_setup)
         endif()
         set(CPU_FLAGS "-mcpu=cortex-m0 -mfloat-abi=soft")
         add_definitions(-DBOARD_PCA10028 -DNRF51 -DNRF51422)
-        add_definitions(-DSOFTDEVICE_PRESENT -D${SD_FAMILY_UPPER} -DNRF_SD_BLE_API_VERSION=2 -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD)
-        include_directories(
-                "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
-                "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf51"
-        )
+        if (DEFINED USE_SOFTDEVICE)
+            set(SOFTDEVICE_PATH "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/hex/${SD_FAMILY}_nrf51_${SD_REVISION}_softdevice.hex")
+            add_definitions(-DSOFTDEVICE_PRESENT -D${SD_FAMILY_UPPER} -DNRF_SD_BLE_API_VERSION=2 -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD)
+            include_directories(
+                    "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
+                    "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf51"
+            )
+        endif()
         if (NOT DEFINED NRF5_STARTUP_FILES_PATH)
             list(APPEND SDK_SOURCE_FILES
                     "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf51.c"
@@ -83,7 +86,6 @@ macro(nRF5x_setup)
                     "${NRF5_STARTUP_FILES_PATH}/gcc_startup_nrf51.S"
                     )
         endif()
-        set(SOFTDEVICE_PATH "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/hex/${SD_FAMILY}_nrf51_${SD_REVISION}_softdevice.hex")
     elseif (NRF_TARGET MATCHES "nrf52")
         # nRF52 (nRF52-DK => PCA10040)
 
@@ -92,11 +94,14 @@ macro(nRF5x_setup)
         endif()
         set(CPU_FLAGS "-mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
         add_definitions(-DNRF52 -DNRF52832 -DNRF52832_XXAA -DNRF52_PAN_74 -DNRF52_PAN_64 -DNRF52_PAN_12 -DNRF52_PAN_58 -DNRF52_PAN_54 -DNRF52_PAN_31 -DNRF52_PAN_51 -DNRF52_PAN_36 -DNRF52_PAN_15 -DNRF52_PAN_20 -DNRF52_PAN_55 -DBOARD_PCA10040)
-        add_definitions(-DSOFTDEVICE_PRESENT -D${SD_FAMILY_UPPER} -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD -DNRF_SD_BLE_API_VERSION=6)
-        include_directories(
-                "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
-                "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf52"
-        )
+        if (DEFINED USE_SOFTDEVICE)
+            set(SOFTDEVICE_PATH "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/hex/${SD_FAMILY}_nrf52_${SD_REVISION}_softdevice.hex")
+            add_definitions(-DSOFTDEVICE_PRESENT -D${SD_FAMILY_UPPER} -DSWI_DISABLE0 -DBLE_STACK_SUPPORT_REQD -DNRF_SD_BLE_API_VERSION=6)
+            include_directories(
+                    "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers"
+                    "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/headers/nrf52"
+            )
+        endif()
         if (NOT DEFINED NRF5_STARTUP_FILES_PATH)
             list(APPEND SDK_SOURCE_FILES
                     "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52.c"
@@ -108,8 +113,13 @@ macro(nRF5x_setup)
                     "${NRF5_STARTUP_FILES_PATH}/gcc_startup_nrf52.S"
                     )
         endif()
-        set(SOFTDEVICE_PATH "${NRF5_SDK_PATH}/components/softdevice/${SD_FAMILY}/hex/${SD_FAMILY}_nrf52_${SD_REVISION}_softdevice.hex")
     endif ()
+    
+    if (NOT DEFINED USE_SOFTDEVICE)
+        include_directories(
+                "${NRF5_SDK_PATH}/components/drivers_nrf/nrf_soc_nosd"
+        )
+    endif()
 
     set(COMMON_FLAGS "-MP -MD -mthumb -mabi=aapcs -Wall -g3 -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin --short-enums ${CPU_FLAGS}")
 
@@ -130,7 +140,6 @@ macro(nRF5x_setup)
     include_directories(
             "${NRF5_SDK_PATH}/components"
             "${NRF5_SDK_PATH}/components/boards"
-            "${NRF5_SDK_PATH}/components/softdevice/common"
             "${NRF5_SDK_PATH}/integration/nrfx"
             "${NRF5_SDK_PATH}/integration/nrfx/legacy"
             "${NRF5_SDK_PATH}/modules/nrfx"
@@ -139,10 +148,12 @@ macro(nRF5x_setup)
             "${NRF5_SDK_PATH}/modules/nrfx/mdk"
     )
 
+    if (DEFINED USE_SOFTDEVICE)
+        include_directories("${NRF5_SDK_PATH}/components/softdevice/common")
+    endif()
+
     list(APPEND SDK_SOURCE_FILES
             "${NRF5_SDK_PATH}/components/boards/boards.c"
-            "${NRF5_SDK_PATH}/components/softdevice/common/nrf_sdh.c"
-            "${NRF5_SDK_PATH}/components/softdevice/common/nrf_sdh_soc.c"
             "${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_clock.c"
             "${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_uart.c"
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_temp.c"
@@ -161,7 +172,12 @@ macro(nRF5x_setup)
             "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/prs/nrfx_prs.c"
             "${NRF5_SDK_PATH}/modules/nrfx/soc/nrfx_atomic.c"
             )
-
+    if (DEFINED USE_SOFTDEVICE)
+        list(APPEND SDK_SOURCE_FILES             
+                "${NRF5_SDK_PATH}/components/softdevice/common/nrf_sdh.c"
+                "${NRF5_SDK_PATH}/components/softdevice/common/nrf_sdh_soc.c"
+                )
+    endif()
 
     # toolchain specific
     include_directories(
@@ -269,30 +285,31 @@ macro(nRF5x_setup)
             "${NRF5_SDK_PATH}/external/fprintf/nrf_fprintf_format.c"
             )
 
-
-    # Common Bluetooth Low Energy files
-    include_directories(
-            "${NRF5_SDK_PATH}/components/ble"
-            "${NRF5_SDK_PATH}/components/ble/common"
-            "${NRF5_SDK_PATH}/components/ble/ble_advertising"
-            "${NRF5_SDK_PATH}/components/ble/ble_dtm"
-            "${NRF5_SDK_PATH}/components/ble/ble_link_ctx_manager"
-            "${NRF5_SDK_PATH}/components/ble/ble_racp"
-            "${NRF5_SDK_PATH}/components/ble/nrf_ble_qwr"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager"
-    )
-
-    list(APPEND SDK_SOURCE_FILES
-            "${NRF5_SDK_PATH}/components/softdevice/common/nrf_sdh_ble.c"
-            "${NRF5_SDK_PATH}/components/ble/common/ble_advdata.c"
-            "${NRF5_SDK_PATH}/components/ble/common/ble_conn_params.c"
-            "${NRF5_SDK_PATH}/components/ble/common/ble_conn_state.c"
-            "${NRF5_SDK_PATH}/components/ble/common/ble_srv_common.c"
-            "${NRF5_SDK_PATH}/components/ble/ble_advertising/ble_advertising.c"
-            "${NRF5_SDK_PATH}/components/ble/ble_link_ctx_manager/ble_link_ctx_manager.c"
-            "${NRF5_SDK_PATH}/components/ble/ble_services/ble_nus/ble_nus.c"
-            "${NRF5_SDK_PATH}/components/ble/nrf_ble_qwr/nrf_ble_qwr.c"
-            )
+    if (DEFINED USE_SOFTDEVICE)
+        # Common Bluetooth Low Energy files
+        include_directories(
+                "${NRF5_SDK_PATH}/components/ble"
+                "${NRF5_SDK_PATH}/components/ble/common"
+                "${NRF5_SDK_PATH}/components/ble/ble_advertising"
+                "${NRF5_SDK_PATH}/components/ble/ble_dtm"
+                "${NRF5_SDK_PATH}/components/ble/ble_link_ctx_manager"
+                "${NRF5_SDK_PATH}/components/ble/ble_racp"
+                "${NRF5_SDK_PATH}/components/ble/nrf_ble_qwr"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager"
+        )
+    
+        list(APPEND SDK_SOURCE_FILES
+                "${NRF5_SDK_PATH}/components/ble/common/ble_advdata.c"
+                "${NRF5_SDK_PATH}/components/softdevice/common/nrf_sdh_ble.c"
+                "${NRF5_SDK_PATH}/components/ble/common/ble_conn_params.c"
+                "${NRF5_SDK_PATH}/components/ble/common/ble_conn_state.c"
+                "${NRF5_SDK_PATH}/components/ble/common/ble_srv_common.c"
+                "${NRF5_SDK_PATH}/components/ble/ble_advertising/ble_advertising.c"
+                "${NRF5_SDK_PATH}/components/ble/ble_link_ctx_manager/ble_link_ctx_manager.c"
+                "${NRF5_SDK_PATH}/components/ble/ble_services/ble_nus/ble_nus.c"
+                "${NRF5_SDK_PATH}/components/ble/nrf_ble_qwr/nrf_ble_qwr.c"
+                )
+    endif()
 
     if (USE_SOFTDEVICE)
         # adds target for erasing and flashing the board with a softdevice
@@ -455,50 +472,53 @@ endmacro(nRF5x_addBSP)
 
 # adds Bluetooth Low Energy GATT support library
 macro(nRF5x_addBLEGATT)
-    include_directories(
-            "${NRF5_SDK_PATH}/components/ble/nrf_ble_gatt"
-    )
-
-    list(APPEND SDK_SOURCE_FILES
-            "${NRF5_SDK_PATH}/components/ble/nrf_ble_gatt/nrf_ble_gatt.c"
-            )
-
+    if (DEFINED USE_SOFTDEVICE)
+        include_directories(
+                "${NRF5_SDK_PATH}/components/ble/nrf_ble_gatt"
+        )
+    
+        list(APPEND SDK_SOURCE_FILES
+                "${NRF5_SDK_PATH}/components/ble/nrf_ble_gatt/nrf_ble_gatt.c"
+                )
+    endif()
 endmacro(nRF5x_addBLEGATT)
 
 # adds Bluetooth Low Energy advertising support library
 macro(nRF5x_addBLEAdvertising)
-    include_directories(
-            "${NRF5_SDK_PATH}/components/ble/ble_advertising"
-    )
-
-    list(APPEND SDK_SOURCE_FILES
-            "${NRF5_SDK_PATH}/components/ble/ble_advertising/ble_advertising.c"
-            )
-
+    if (DEFINED USE_SOFTDEVICE)
+        include_directories(
+                "${NRF5_SDK_PATH}/components/ble/ble_advertising"
+        )
+    
+        list(APPEND SDK_SOURCE_FILES
+                "${NRF5_SDK_PATH}/components/ble/ble_advertising/ble_advertising.c"
+                )
+    endif()
 endmacro(nRF5x_addBLEAdvertising)
 
 # adds Bluetooth Low Energy advertising support library
 macro(nRF5x_addBLEPeerManager)
-    include_directories(
-            "${NRF5_SDK_PATH}/components/ble/peer_manager"
-    )
-
-    list(APPEND SDK_SOURCE_FILES
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/auth_status_tracker.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/gatt_cache_manager.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/gatts_cache_manager.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/id_manager.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/nrf_ble_lesc.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_data_storage.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_database.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_id.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_manager.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_manager_handler.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/pm_buffer.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/security_dispatcher.c"
-            "${NRF5_SDK_PATH}/components/ble/peer_manager/security_manager.c"
-    )
-
+    if (DEFINED USE_SOFTDEVICE)
+        include_directories(
+                "${NRF5_SDK_PATH}/components/ble/peer_manager"
+        )
+    
+        list(APPEND SDK_SOURCE_FILES
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/auth_status_tracker.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/gatt_cache_manager.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/gatts_cache_manager.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/id_manager.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/nrf_ble_lesc.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_data_storage.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_database.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_id.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_manager.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/peer_manager_handler.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/pm_buffer.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/security_dispatcher.c"
+                "${NRF5_SDK_PATH}/components/ble/peer_manager/security_manager.c"
+        )
+    endif()
 endmacro(nRF5x_addBLEPeerManager)
 
 # adds app-level FDS (flash data storage) library
@@ -522,18 +542,6 @@ endmacro(nRF5x_addAppFDS)
 macro(nRF5x_addNFC)
     # NFC includes
     include_directories(
-            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ac_rec_parser"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ble_oob_advdata_parser"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/le_oob_rec_parser"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ac_rec"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_oob_advdata"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_lib"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_msg"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/common"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ep_oob_rec"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/hs_rec"
-            "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/le_oob_rec"
             "${NRF5_SDK_PATH}/components/nfc/ndef/generic/message"
             "${NRF5_SDK_PATH}/components/nfc/ndef/generic/record"
             "${NRF5_SDK_PATH}/components/nfc/ndef/launchapp"
@@ -550,6 +558,23 @@ macro(nRF5x_addNFC)
             "${NRF5_SDK_PATH}/components/nfc/t4t_parser/tlv"
     )
 
+    if (DEFINED USE_SOFTDEVICE)
+        include_directories(
+                "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ac_rec_parser"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/ble_oob_advdata_parser"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/conn_hand_parser/le_oob_rec_parser"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ac_rec"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_oob_advdata"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_lib"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ble_pair_msg"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/common"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/ep_oob_rec"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/hs_rec"
+                "${NRF5_SDK_PATH}/components/nfc/ndef/connection_handover/le_oob_rec"
+        )
+    endif()
+
     list(APPEND SDK_SOURCE_FILES
             "${NRF5_SDK_PATH}/components/nfc"
             )
@@ -557,12 +582,13 @@ macro(nRF5x_addNFC)
 endmacro(nRF5x_addNFC)
 
 macro(nRF5x_addBLEService NAME)
-    include_directories(
-            "${NRF5_SDK_PATH}/components/ble/ble_services/${NAME}"
-    )
+    if (DEFINED USE_SOFTDEVICE)
+        include_directories(
+                "${NRF5_SDK_PATH}/components/ble/ble_services/${NAME}"
+        )
 
-    list(APPEND SDK_SOURCE_FILES
-            "${NRF5_SDK_PATH}/components/ble/ble_services/${NAME}/${NAME}.c"
-            )
-
+        list(APPEND SDK_SOURCE_FILES
+                "${NRF5_SDK_PATH}/components/ble/ble_services/${NAME}/${NAME}.c"
+                )
+    endif()
 endmacro(nRF5x_addBLEService)
